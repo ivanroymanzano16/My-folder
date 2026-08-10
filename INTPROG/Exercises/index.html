@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team // Integrative Programming &amp; Technologies</title>
+<style>
+  :root{
+    --paper:#F2EFE4;
+    --card:#FFFFFF;
+    --ink:#1E2A22;
+    --muted:#6B7568;
+    --line:#97833f;
+    --pine:#2F6F4E;
+    --mustard:#E0A83E;
+    --violet:#6C5CE7;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Work Sans', 'Segoe UI', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    min-height:100vh;
+  }
+
+  header.hero{
+    padding:64px 6vw 40px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--pine);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--mustard);
+    box-shadow:0 0 0 4px rgba(224,168,62,.2);
+  }
+  h1.title{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:clamp(34px,6vw,64px);
+    line-height:1.02;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  h1.title span{color:var(--pine);}
+  p.sub{
+    max-width:560px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.6;
+    margin:0;
+  }
+  .count-tag{
+    position:absolute;
+    right:6vw; top:64px;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--muted);
+    text-align:right;
+  }
+  .count-tag b{
+    display:block;
+    font-size:40px;
+    color:var(--ink);
+    line-height:1;
+  }
+
+  main{
+    padding:48px 6vw 90px;
+  }
+  #grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:24px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    display:flex;
+    flex-direction:column;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-4px);
+    box-shadow:0 14px 28px -12px rgba(30,42,34,.25);
+    border-color:var(--pine);
+    outline:none;
+  }
+  .card:focus-visible{ outline:2px solid var(--pine); outline-offset:2px; }
+
+  .titlebar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    background:#EDE9DA;
+    border-bottom:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted);
+  }
+  .dot{width:9px;height:9px;border-radius:50%;}
+  .dot.r{background:#E0705C;} .dot.y{background:var(--mustard);} .dot.g{background:var(--pine);}
+  .filename{margin-left:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+  .photo-wrap{
+    aspect-ratio:4/3;
+    overflow:hidden;
+    background:#EDE9DA;
+  }
+  .photo-wrap img{
+    width:100%; height:100%; object-fit:cover;
+    display:block;
+    filter:grayscale(45%);
+    transition:filter .2s ease;
+  }
+  .card:hover .photo-wrap img{ filter:grayscale(0%); }
+
+  .card-body{ padding:16px 16px 20px; }
+  .card-body .name{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:17px;
+    margin:0 0 2px;
+  }
+  .card-body .role{
+    font-size:13px;
+    color:var(--pine);
+    margin:0 0 10px;
+    font-weight:600;
+  }
+  .meta-list{
+    list-style:none; margin:0; padding:0;
+    font-size:12.5px; color:var(--muted);
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .meta-list li{ display:flex; gap:6px; align-items:baseline; }
+  .meta-list .k{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); width:56px; flex-shrink:0; }
+  .meta-list .v{ color:var(--ink); }
+  .tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-family:var(--mono);
+    font-size:10.5px;
+    padding:3px 8px;
+    border-radius:20px;
+    background:rgba(108,92,231,.09);
+    color:var(--violet);
+    border:1px solid rgba(108,92,231,.25);
+  }
+  .tag.hobby{
+    background:rgba(224,168,62,.12);
+    color:#8A6415;
+    border-color:rgba(224,168,62,.35);
+  }
+
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(20,26,20,.55);
+    backdrop-filter:blur(2px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+    z-index:50;
+  }
+  .overlay.open{ opacity:1; pointer-events:auto; }
+
+  .panel{
+    background:var(--card);
+    max-width:760px;
+    width:100%;
+    max-height:88vh;
+    overflow-y:auto;
+    border-radius:10px;
+    border:1px solid var(--line);
+    transform:translateY(16px) scale(.98);
+    transition:transform .2s ease;
+  }
+  .overlay.open .panel{ transform:translateY(0) scale(1); }
+
+  .panel-titlebar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px;
+    background:#EDE9DA;
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0;
+  }
+  .panel-titlebar .left{ display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px; color:var(--muted);}
+  .close-btn{
+    border:none; background:transparent; cursor:pointer;
+    font-family:var(--mono); font-size:16px; color:var(--muted);
+    width:28px;height:28px; border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .close-btn:hover{ background:#E0705C22; color:#C0392B; }
+
+  .panel-content{ padding:28px 32px 40px; }
+  .panel-top{ display:flex; gap:24px; flex-wrap:wrap; margin-bottom:24px;}
+  .panel-photo{
+    width:140px; height:140px; border-radius:10px; overflow:hidden;
+    border:1px solid var(--line); flex-shrink:0;
+  }
+  .panel-photo img{ width:100%; height:100%; object-fit:cover; }
+  .panel-id{ flex:1; min-width:200px; }
+  .panel-id .name{ font-family:var(--mono); font-size:26px; font-weight:700; margin:0 0 4px;}
+  .panel-id .role{ color:var(--pine); font-weight:600; margin:0 0 12px;}
+  .panel-id .tags{ margin-bottom:14px; }
+  .contact-list{ list-style:none; padding:0; margin:0; font-size:13.5px; color:var(--muted); font-family:var(--mono);}
+  .contact-list li{ margin-bottom:4px; }
+  .contact-list a{ color:var(--muted); text-decoration:none; border-bottom:1px dotted var(--line); }
+  .contact-list a:hover{ color:var(--pine); border-color:var(--pine); }
+
+  .section-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); margin:22px 0 8px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .bio{ font-size:15px; line-height:1.7; color:var(--ink); margin:0; }
+
+  .detail-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+    gap:14px 24px; margin-top:4px;
+  }
+  .detail-item .k{
+    font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); margin:0 0 3px;
+  }
+  .detail-item .v{ font-size:15px; color:var(--ink); margin:0; font-weight:600; }
+
+  footer{
+    padding:26px 6vw; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:12px; color:var(--muted);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; scroll-behavior:auto !important; }
+  }
+
+  @media (max-width:640px){
+    .count-tag{ position:static; text-align:left; margin-top:18px; }
+    header.hero{ padding:40px 5vw 28px; }
+    main{ padding:32px 5vw 60px; }
+    .panel-content{ padding:22px 18px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">group_members.init()</div>
+  <h1 class="title">Meet the <span>Team</span></h1>
+  <p class="sub">Seven groupmates, one project. Click a profile card to open the full member page &mdash; age, location, course, and hobbies.</p>
+  <div class="count-tag"><b id="member-count">00</b>members</div>
+</header>
+
+<main>
+  <div id="grid"></div>
+</main>
+
+<footer>
+  <span>Integrative Programming &amp; Technologies &mdash; Team Project</span>
+  <span id="build-date"></span>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-name">
+    <div class="panel-titlebar">
+      <div class="left">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span id="panel-filename">member.profile</span>
+      </div>
+      <button class="close-btn" id="close-btn" aria-label="Close profile">&#10005;</button>
+    </div>
+    <div class="panel-content" id="panel-content"></div>
+  </div>
+</div>
+
+<script>
+
+const TEAM_DATA = [
+  {
+    id: "m01",
+    fullName: "Andrino, Carlz D.",
+    age: 20,
+    birthday: "January 20, 2006",
+    location: "Molino 3, Bacoor, Cavite",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Online Games", "Reading", "Cooking"],
+    photo: "images/andrino.jpg"
+  },
+  {
+    id: "m02",
+    fullName: "Bernal, Loid Russel A.",
+    age: 20,
+    birthday: "June 19, 2006",
+    location: "Poblacion, Muntinlupa City",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Gaming", "Watching Movies", "Doom Scrolling"],
+    photo: "images/bernal.jpg"
+  },
+  {
+    id: "m03",
+    fullName: "Garcia, Kyla C.",
+    age: 20,
+    birthday: "July 11, 2006",
+    location: "Bayanan, Muntinlupa City",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Singing", "Watching Movies", "Listening to Music"],
+    photo: "images/garcia.jpg"
+  },
+  {
+    id: "m04",
+    fullName: "Grejarte, Althea Kyle N.",
+    age: 20,
+    birthday: "July 5, 2006",
+    location: "Putatan, Muntinlupa City",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Reading", "Gaming", "Sketching"],
+    photo: "images/grejarte.jpg"
+  },
+  {
+    id: "m05",
+    fullName: "Hernandez, John Marcel V.",
+    age: 20,
+    birthday: "December 25, 2005",
+    location: "GMA, Cavite, Brgy. F. Reyes",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Playing Guitar", "Reading", "Jogging & Walking", "Singing"],
+    photo: "images/hernandez.jpg"
+  },
+  {
+    id: "m06",
+    fullName: "Manzano, Ivan Roy L.",
+    age: 19,
+    birthday: "October 29, 2006",
+    location: "Prinza, Poblacion, Muntinlupa City",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Watching Movies", "Jogging"],
+    photo: "images/manzano.jpg"
+  },
+  {
+    id: "m07",
+    fullName: "Perez, Pauline Angel T.",
+    age: 20,
+    birthday: "May 6, 2006",
+    location: "NBP Poblacion, Muntinlupa City",
+    course: "BSIT",
+    year: "3rd Year",
+    hobbies: ["Cafe Hopping"],
+    photo: "images/perez.jpg"
+  }
+];
+
+const grid = document.getElementById("grid");
+const memberCount = document.getElementById("member-count");
+memberCount.textContent = String(TEAM_DATA.length).padStart(2, "0");
+document.getElementById("build-date").textContent =
+  "compiled " + new Date().toISOString().slice(0,10);
+
+function renderGrid(){
+  grid.innerHTML = "";
+  TEAM_DATA.forEach((member, index) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Open profile for ${member.fullName}`);
+
+    card.innerHTML = `
+      <div class="titlebar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="filename">${member.id}.profile</span>
+      </div>
+      <div class="photo-wrap">
+        <img src="${member.photo}" alt="Photo of ${member.fullName}" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="name">${member.fullName}</p>
+        <p class="role">${member.course} &middot; ${member.year}</p>
+        <div class="tags">
+          ${member.hobbies.map(h => `<span class="tag">${h}</span>`).join("")}
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", () => openProfile(index));
+    card.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openProfile(index); }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+const overlay = document.getElementById("overlay");
+const panelContent = document.getElementById("panel-content");
+const panelFilename = document.getElementById("panel-filename");
+const closeBtn = document.getElementById("close-btn");
+let lastFocused = null;
+
+function openProfile(index){
+  const m = TEAM_DATA[index];
+  lastFocused = document.activeElement;
+  panelFilename.textContent = `${m.id}.profile`;
+
+  panelContent.innerHTML = `
+    <div class="panel-top">
+      <div class="panel-photo"><img src="${m.photo}" alt="Photo of ${m.fullName}"></div>
+      <div class="panel-id">
+        <p class="name" id="panel-name">${m.fullName}</p>
+        <p class="role">${m.course} &middot; ${m.year}</p>
+        <ul class="contact-list">
+          <li>&#128100; Age: ${m.age}</li>
+          <li>&#127881; ${m.birthday}</li>
+          <li>&#128205; ${m.location}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Hobbies</div>
+    <div class="tags">${m.hobbies.map(h => `<span class="tag">${h}</span>`).join("")}</div>
+  `;
+
+  overlay.classList.add("open");
+  closeBtn.focus();
+  document.addEventListener("keydown", handleEsc);
+}
+
+function closeProfile(){
+  overlay.classList.remove("open");
+  document.removeEventListener("keydown", handleEsc);
+  if(lastFocused) lastFocused.focus();
+}
+
+function handleEsc(e){
+  if(e.key === "Escape") closeProfile();
+}
+
+closeBtn.addEventListener("click", closeProfile);
+overlay.addEventListener("click", (e) => {
+  if(e.target === overlay) closeProfile();
+});
+
+renderGrid();
+</script>
+</body>
+</html>
