@@ -22,13 +22,25 @@ if ($searchTerm !== '') {
         return strpos($haystack, $needle) !== false;
     });
 }
+
+$postedName = '';
+$postedMessage = '';
+$showThankYou = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guest_name'], $_POST['guest_message'])) {
+    $postedName = trim($_POST['guest_name']);
+    $postedMessage = trim($_POST['guest_message']);
+    if ($postedName !== '' && $postedMessage !== '') {
+        $showThankYou = true;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Team | Exer 3 - GET</title>
+<title>Our Team | Exer 4 - POST</title>
 <style>
     * {
         margin: 0;
@@ -172,6 +184,71 @@ if ($searchTerm !== '') {
         padding: 40px 0;
     }
 
+    .message-section {
+        max-width: 500px;
+        margin: 50px auto 0;
+        background: #1c222c;
+        border: 1px solid #2a3140;
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .message-section h3 {
+        margin-bottom: 14px;
+        font-size: 18px;
+    }
+
+    .message-section label {
+        display: block;
+        font-size: 13px;
+        color: #9aa4b2;
+        margin-bottom: 6px;
+        margin-top: 12px;
+    }
+
+    .message-section input[type="text"],
+    .message-section textarea {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #333c4a;
+        background: #14181f;
+        color: #eaeaea;
+        font-size: 14px;
+        outline: none;
+        resize: vertical;
+    }
+
+    .message-section input[type="text"]:focus,
+    .message-section textarea:focus {
+        border-color: #4d7cfe;
+    }
+
+    .message-section button {
+        margin-top: 16px;
+        padding: 11px 22px;
+        border-radius: 999px;
+        border: none;
+        background: #4d7cfe;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .message-section button:hover {
+        background: #3d68e0;
+    }
+
+    .thank-you {
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: #1e2b1e;
+        border: 1px solid #2f5c33;
+        border-radius: 8px;
+        color: #a6e3a1;
+        font-size: 13px;
+    }
+
     footer {
         background: #171c25;
         text-align: center;
@@ -202,7 +279,7 @@ if ($searchTerm !== '') {
     <?php if ($searchTerm !== ''): ?>
         <p class="search-info">
             Showing results for "<?php echo htmlspecialchars($searchTerm); ?>"
-            &middot; <a href="exer3.php">Clear search</a>
+            &middot; <a href="exer4.php">Clear search</a>
         </p>
     <?php endif; ?>
 </div>
@@ -228,7 +305,29 @@ if ($searchTerm !== '') {
     <?php if (count($filtered_members) === 0): ?>
         <p class="no-results">No matching member found.</p>
     <?php endif; ?>
+
+    <div class="message-section">
+        <h3>Leave a Message for the Team</h3>
+        <form method="POST" action="">
+            <label for="guest_name">Your Name</label>
+            <input type="text" id="guest_name" name="guest_name" required
+                value="<?php echo htmlspecialchars($postedName); ?>">
+
+            <label for="guest_message">Your Message</label>
+            <textarea id="guest_message" name="guest_message" rows="3" required><?php echo htmlspecialchars($postedMessage); ?></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+
+        <?php if ($showThankYou): ?>
+            <div class="thank-you">
+                Thanks, <?php echo htmlspecialchars($postedName); ?>! We received your message:
+                "<?php echo htmlspecialchars($postedMessage); ?>"
+            </div>
+        <?php endif; ?>
+    </div>
 </main>
+
 
 </body>
 </html>
