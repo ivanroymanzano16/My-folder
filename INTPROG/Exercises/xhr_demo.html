@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XHR Demo</title>
+</head>
+<body>
+
+    <h2>XMLHttpRequest Demo</h2>
+
+    <button id="loadBtn">Load Post Data</button>
+
+    <div id="output"></div>
+
+    <script>
+        document.getElementById("loadBtn").addEventListener("click", function() {
+
+            // Create XMLHttpRequest object
+            let xhr = new XMLHttpRequest();
+
+            // Send GET request to the API
+            xhr.open("GET", "https://jsonplaceholder.typicode.com/posts/1", true);
+
+            // Handle the response
+            xhr.onload = function() {
+
+                let output = document.getElementById("output");
+
+                if (xhr.status === 200) {
+
+                    // Convert JSON response into JavaScript object
+                    let post = JSON.parse(xhr.responseText);
+
+                    // Display title and body
+                    output.innerHTML =
+                        "<h3>" + post.title + "</h3>" +
+                        "<p>" + post.body + "</p>";
+
+                } else {
+
+                    // Display error message
+                    output.innerHTML = "Error loading post data!";
+                }
+            };
+
+            // Handle connection errors
+            xhr.onerror = function() {
+                document.getElementById("output").innerHTML =
+                    "Network error. Please try again.";
+            };
+
+            // Send the request
+            xhr.send();
+
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+1. The difference between readystate and status. is readystate is tracking the progress of the network request. while status is indicating the HTTP response result code. 
+
+2.you can make the request asynchronous by using specific language such as async/wait
+
+3. It allows servers and clients to handle tasks like database queries, network requests, and background processes without interrupting the main program or making users wait.
