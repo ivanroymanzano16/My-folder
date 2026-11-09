@@ -1,0 +1,7 @@
+1. XMLHttpRequest (XHR) uses an object with callbacks like onreadystatechange and onload, and you check readyState and status manually. Fetch API is Promise-based, uses .then() and .catch(), and returns a Response object with built-in methods like response.json(). Fetch also has simpler syntax for headers and request bodies. One difference is that fetch does not reject on HTTP errors like 404 or 500, so you must check response.ok yourself.
+
+2. Fetch is considered more modern because it uses Promises, which avoids deeply nested callbacks. The code reads in a clear top-to-bottom chain (fetch, then convert to JSON, then display, then catch errors). It is shorter and easier to read than the XHR version.
+
+3. .then() runs when the previous step succeeds. It is used to process the response, for example converting it to JSON and then displaying the data. .catch() runs when an error occurs, such as a network failure or a thrown error, so the error can be handled and an error message shown to the user.
+
+4. The server receives the data (title, body, userId) and responds with the data plus a new id (101). The jsonplaceholder API only simulates creating the post, so nothing is actually saved on the server.
